@@ -1,7 +1,6 @@
 package com.mishrole.undercontrol.entity.response;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.lang.Nullable;
 
@@ -14,7 +13,7 @@ public class APIResponse {
 	@Nullable
 	private Object data;
 	@Nullable
-	private List<Map<String, Object>> errors;
+	private List<?> errors;
 	
 	public String getTitle() {
 		return title;
@@ -35,11 +34,11 @@ public class APIResponse {
 	public void setData(Object data) {
 		this.data = data;
 	}
-	public List<Map<String, Object>> getErrors() {
+	public List<?> getErrors() {
 		return errors;
 	}
 	
-	public void setErrors(List<Map<String, Object>> errors) {
+	public void setErrors(List<?> errors) {
 		this.errors = errors;
 	}
 	
@@ -48,7 +47,7 @@ public class APIResponse {
 		this.data = data;
 	}
 	
-	public APIResponse(String title, String detail, List<Map<String, Object>> errors) {
+	public APIResponse(String title, String detail, List<?> errors) {
 		this.title = title;
 		this.detail = detail;
 		this.errors = errors;

@@ -32,17 +32,11 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-	
-	//@Autowired
-	//private UserHasRoleService userHasRoleService;
-	
-	//@Autowired
-	//private BCryptPasswordEncoder passwordEncoder;
-	
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> list() {
 		List<User> users = userService.getAll();
-		return Constant.responseMessageSuccess(HttpStatus.OK, "Success", users);
+		return Constant.responseMessage(HttpStatus.OK, "Success", users);
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,10 +44,10 @@ public class UserController {
 		User user = userService.findUserById(id);
 		
 		if (user == null) {
-			return Constant.responseMessage(HttpStatus.NOT_FOUND, "Error", String.format("User with id %s not found", id));
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the user has not been found", String.format("User with id %s not found", id), "id");
 		}
 		
-		return Constant.responseMessageSuccess(HttpStatus.OK, "Success", user);
+		return Constant.responseMessage(HttpStatus.OK, "Success", user);
 	}
 	
 	@PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -67,7 +61,7 @@ public class UserController {
 			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the user has not been saved", errors);
 		}
 		
-		return Constant.responseMessageSuccess(HttpStatus.OK, "Success", registerResult);
+		return Constant.responseMessage(HttpStatus.OK, "Success", registerResult);
 		
 	}
 	

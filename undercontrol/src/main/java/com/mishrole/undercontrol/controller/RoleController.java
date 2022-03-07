@@ -27,6 +27,6 @@ public class RoleController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> list() {
 		List<Role> roles = roleService.getAll();
-		return Constant.responseMessageSuccess(HttpStatus.OK, "Success", roles);
+		return Constant.responseMessage(HttpStatus.OK, "Success", roles);
 	}
 }

@@ -1,10 +1,11 @@
 package com.mishrole.undercontrol.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,36 +55,30 @@ public class Constant {
 			+ "ngzRKIYduV6yFLB/DE40kMDh7MX2NSWK0bDJTPwiOir3j2RJX5s=\r\n"
 			+ "-----END RSA PRIVATE KEY-----";
 	
-	public static ResponseEntity<?> responseMessageErrors(HttpStatus status, String title, String detail, List<Map<String, Object>> properties) {
+	public static ResponseEntity<?> responseMessageErrors(HttpStatus status, String title, String detail, List<?> errors) {
 		return ResponseEntity
 				.status(status)
 				.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-				.body(new APIResponse(title, detail, properties));
+				.body(new APIResponse(title, detail, errors));
 	}
 	
-	public static ResponseEntity<?> responseMessageSuccess(HttpStatus status, String title, Object data) {
+	public static ResponseEntity<?> responseMessageError(HttpStatus status, String title, String detail, String error, String element) {
+		List<Map<String, Object>> errors = new ArrayList<Map<String, Object>>();
+		Map<String, Object> wrapper = new HashMap<String, Object>();
+		wrapper.put(element, error);
+		errors.add(wrapper);
+		
+		return ResponseEntity
+				.status(status)
+				.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
+				.body(new APIResponse(title, detail, errors));
+	}
+	
+	public static ResponseEntity<?> responseMessage(HttpStatus status, String title, Object data) {
 		return ResponseEntity
 				.status(status)
 				.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
 				.body(new APIResponse(title, data));
 	}
-
-	public static ResponseEntity<?> responseMessageProperties(HttpStatus status, String title, String detail, List<Map<String, Object>> properties) {
-		return ResponseEntity
-				.status(status)
-				.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-				.body(Problem.create()
-					.withTitle(title)
-					.withDetail(detail)
-					.withProperties(properties));
-	}
 	
-	public static ResponseEntity<?> responseMessage(HttpStatus status, String title, String detail) {
-		return ResponseEntity
-				.status(status)
-				.header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-				.body(Problem.create()
-					.withTitle(title)
-					.withDetail(detail));
-	}
 }
