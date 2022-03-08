@@ -1,6 +1,7 @@
 package com.mishrole.undercontrol.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -66,6 +68,9 @@ public class Account implements Serializable {
 	private Date updatedAt;
 	
 	private Boolean deleted;
+	
+	@Transient
+	private BigDecimal total;
 
 	public Currency getCurrency() {
 		return currency;
@@ -81,6 +86,14 @@ public class Account implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 
 	public String getName() {

@@ -1,22 +1,16 @@
 package com.mishrole.undercontrol.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "records_categories")
@@ -33,9 +27,9 @@ public class Category implements Serializable {
 	@Size(min = 3, max = 15, message = "Name must have 3-15 characters long")
 	private String name;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	/*@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JsonManagedReference(value = "category-record")
-    private List<Record> records;
+    private List<Record> records;*/
 	
 	private Boolean deleted;
 	
@@ -44,13 +38,13 @@ public class Category implements Serializable {
         this.deleted = false;
     }
 	
-	public List<Record> getRecords() {
+	/*public List<Record> getRecords() {
 		return records;
 	}
 
 	public void setRecords(List<Record> records) {
 		this.records = records;
-	}
+	}*/
 	
 	public Long getId() {
 		return id;
