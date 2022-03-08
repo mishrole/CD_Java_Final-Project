@@ -35,29 +35,6 @@ Create table connections (
     foreign key (connect_to) references users(id) on delete cascade
 );
 
-/*
-Contact is a another user (friend)
-
-Create table contacts_categories (
-	id int primary key auto_increment,
-    name varchar(255) not null
-);
-
-Create table contacts (
-	id int primary key auto_increment,
-    firstname varchar(255) not null,
-    lastname varchar(255) not null,
-    email varchar(255) not null,
-    owner_id int not null,
-    contact_category_id int not null,
-    deleted bool default false,
-	createdAt datetime,
-    updatedAt datetime,
-    foreign key (owner_id) references users(id) on delete cascade,
-    foreign key (contact_category_id) references contacts_categories(id)
-);
- */
-
  Create table currencies (
     id int primary key auto_increment,
     name varchar(50) not null,
@@ -108,3 +85,6 @@ Create table records (
 );
 
 Insert into roles VALUES (1, 'ROLE_ADMIN'), (2, 'ROLE_USER');
+Insert into currencies VALUES (1, 'Dollar', 'USD'), (2, 'Peruvian Sol', 'PEN');
+Insert into records_categories(name) VALUES ('Food'), ('Shopping'), ('Housing'), ('Transportation'), ('Income'), ('Health'), ('Other');
+Insert into records_types (name) VALUES ('Income'), ('Expense');
