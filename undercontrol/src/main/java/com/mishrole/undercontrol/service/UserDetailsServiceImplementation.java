@@ -32,7 +32,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 		Optional<User> potentialUser = userRepository.findByEmail(username);
 		
 		if (!potentialUser.isPresent()) {
-			throw new UsernameNotFoundException("User not found");
+			throw new UsernameNotFoundException("User with email " + username + " not found");
 		}
 		
 		User user = potentialUser.get();

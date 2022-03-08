@@ -35,7 +35,7 @@ public class Type implements Serializable {
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@OneToMany(mappedBy = "type", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value = "type-record")
     private List<Record> records;
 
 	public List<Record> getRecords() {

@@ -75,7 +75,7 @@ public class User implements Serializable {
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value = "account-user")
     private List<Account> accounts;
 	
 	private Boolean deleted;

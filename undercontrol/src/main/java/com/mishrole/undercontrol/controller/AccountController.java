@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,6 +41,12 @@ public class AccountController {
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> save(@Valid @RequestBody Account account, BindingResult result) {
+		
+		if (result.hasErrors()) {
+			List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the account has not been saved", errors);
+		}
+		
 		Account accountResult = accountService.save(account, result);
 		
 		List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
@@ -61,5 +68,24 @@ public class AccountController {
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", accounts);
 		
+	}
+	
+	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @Valid @RequestBody Account account, BindingResult result) {
+		
+		if (result.hasErrors()) {
+			List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the account has not been updated", errors);
+		}
+		
+		Account updatedResult = accountService.update(id, account, result);
+		
+		List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+		
+		if (updatedResult == null) {
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the account has not been updated", errors);
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", updatedResult);
 	}
 }

@@ -45,18 +45,18 @@ public class Account implements Serializable {
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "owner_id", nullable = false)
-	@JsonBackReference
+	@JsonBackReference(value = "account-user")
 	private User owner;
 
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "currency_id", nullable = false)
-	@JsonBackReference
+	@JsonBackReference(value = "account-currency")
 	private Currency currency;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@OneToMany(mappedBy = "account", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value = "account-record")
     private List<Record> records;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

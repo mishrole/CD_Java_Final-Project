@@ -36,7 +36,7 @@ public class Category implements Serializable {
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value = "category-record")
     private List<Record> records;
 	
 	private Boolean deleted;

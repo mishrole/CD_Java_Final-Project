@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import com.mishrole.undercontrol.entity.Record;
 import com.mishrole.undercontrol.repository.RecordRepository;
@@ -22,6 +23,13 @@ public class RecordService implements IRecordService {
 	@Override
 	public List<Record> getAll() {
 		return recordRepository.findAll();
+	}
+
+	@Override
+	public Record save(Record record, BindingResult result) {
+		
+		
+		return recordRepository.save(record);
 	}
 
 }

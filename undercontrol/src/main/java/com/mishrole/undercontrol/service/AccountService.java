@@ -55,9 +55,27 @@ public class AccountService implements IAccountService {
 	}
 
 	@Override
-	public Account update(Long id, Account accounts, BindingResult result) {
-		// TODO Auto-generated method stub
-		return null;
+	public Account update(Long id, Account account, BindingResult result) {
+		Optional<Account> potentialAccount = accountRepository.findById(id);
+		
+		if (!potentialAccount.isPresent()) {
+			result.rejectValue("id", "Matches", "Account with Id " + id + " not found");
+			return null;
+		}
+		
+		if(!(account.getName().equals(potentialAccount.get().getName()))) {
+			Optional<Account> isNameUnique = accountRepository.findByName(account.getName());
+			
+			if (isNameUnique.isPresent()) {
+				result.rejectValue("name", "Matches", "The name is already taken!");
+				return null;
+			}
+		}
+		
+		Account savedAccount = potentialAccount.get();
+		savedAccount.setName(account.getName());
+		
+		return accountRepository.save(savedAccount);
 	}
 
 	@Override

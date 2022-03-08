@@ -1,6 +1,7 @@
 package com.mishrole.undercontrol.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -15,7 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -36,19 +39,19 @@ public class Record implements Serializable {
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "account_id", nullable = false)
-	@JsonBackReference
+	@JsonBackReference(value = "account-record")
 	private Account account;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "record_category_id", nullable = false)
-	@JsonBackReference
+	@JsonBackReference(value = "category-record")
 	private Category category;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "record_type_id", nullable = false)
-	@JsonBackReference
+	@JsonBackReference(value = "type-record")
 	private Type type;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -58,6 +61,10 @@ public class Record implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updatedAt;
+	
+	@NotNull
+	@Range(min = 0, message = "Amount must be at least 0")
+	private BigDecimal amount;
 	
 	private Boolean deleted;
 	
@@ -72,7 +79,15 @@ public class Record implements Serializable {
         this.updatedAt = new Date();
     }
     
-    public Long getId() {
+    public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public Long getId() {
 		return id;
 	}
 

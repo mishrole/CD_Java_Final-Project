@@ -39,7 +39,7 @@ public class Currency implements Serializable {
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     @OneToMany(mappedBy = "currency", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JsonManagedReference
+	@JsonManagedReference(value = "account-currency")
     private List<Account> accounts;
 
 	public List<Account> getAccounts() {

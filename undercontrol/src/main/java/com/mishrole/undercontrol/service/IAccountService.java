@@ -11,6 +11,6 @@ public interface IAccountService {
 	public abstract List<Account> getAll();
 	public abstract void delete(Long id);
 	public abstract Account save(Account account, BindingResult result);
-	public abstract Account update (Long id, Account accounts, BindingResult result);
+	public abstract Account update (Long id, Account account, BindingResult result);
 	public abstract List<Account> getAllByOwner(Long id);
 }

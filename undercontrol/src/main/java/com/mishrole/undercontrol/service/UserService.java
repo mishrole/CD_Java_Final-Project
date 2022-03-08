@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 
 import com.mishrole.undercontrol.entity.Role;
 import com.mishrole.undercontrol.entity.User;
+import com.mishrole.undercontrol.entity.request.ChangePwdUser;
 import com.mishrole.undercontrol.entity.request.RegisterUser;
 import com.mishrole.undercontrol.repository.RoleRepository;
 import com.mishrole.undercontrol.repository.UserRepository;
@@ -45,11 +46,6 @@ public class UserService implements IUserService {
 	@Override
 	public List<User> getAll() {
 		return userRepository.findAll();
-	}
-
-	@Override
-	public User save(User user) {
-		return userRepository.save(user);
 	}
 
 	@Override
@@ -118,6 +114,85 @@ public class UserService implements IUserService {
 		
 		return userRepository.save(newUser);
 		
+	}
+
+	@Override
+	public List<User> findUserByEmailOrFullname(String keyword) {
+		return userRepository.findUserByEmailOrName(keyword+"%");
+	}
+
+	@Override
+	public User update(Long id, User user, BindingResult result) {
+		Optional<User> checkUser = userRepository.findById(id);
+		Optional<User> potentialUser = userRepository.findByEmail(user.getEmail());
+		
+		if (!(potentialUser.isPresent()) || !(checkUser.isPresent())) {
+			result.rejectValue("id", "Matches", "User with Id " + id + " not found");
+			return null;
+		}
+		
+		if (!(potentialUser.get().getId().equals(checkUser.get().getId()))) {
+			result.rejectValue("email", "Matches", "Email provided doesn't match the user with Id " + id);
+			return null;
+		}
+		
+		Boolean isValid = true;
+		
+		try {		
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date today = sdf.parse(sdf.format(new Date()));
+			
+	        Date birthday = user.getBirthday();
+	        
+	        if (birthday.after(today)) {
+            	result.rejectValue("birthday", "Matches", "Birthday must be in the past");
+            	isValid = false;
+            }
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if (!isValid) {
+			return null;
+		}
+		
+		User savedUser = checkUser.get();
+		savedUser.setFirstname(user.getFirstname());
+		savedUser.setLastname(user.getLastname());
+		savedUser.setBirthday(user.getBirthday());
+		
+		return userRepository.save(savedUser);
+	}
+
+	
+	@Override
+	public User changePassword(Long id, ChangePwdUser user, BindingResult result) {
+		Optional<User> checkUser = userRepository.findById(id);
+		
+		User savedUser = checkUser.get();
+		String rawPassword = user.getCurrent();
+
+		if (!passwordEncoder.matches(rawPassword, savedUser.getPassword())) {
+			result.rejectValue("current", "Matches", "Current Password provided doesn't match the user password");
+			return null;
+		}
+		
+		Boolean isValid = true;
+		
+		if (!(user.getPassword().equals(user.getConfirm()))) {
+			result.rejectValue("confirm", "Matches", "The Confirm Password must match Password!");
+			isValid = false;
+		}
+		
+		if (!isValid) {
+			return null;
+		}
+
+		String encryptedPassword = passwordEncoder.encode(user.getPassword());
+		savedUser.setPassword(encryptedPassword);
+		
+		return userRepository.save(savedUser);
 	}
 
 }
