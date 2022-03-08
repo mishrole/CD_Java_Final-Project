@@ -77,6 +77,7 @@ Create table records (
     record_category_id int default null,
     account_id int not null,
     amount decimal(6,2) not null,
+    recordDate datetime,
     deleted bool default false,
 	createdAt datetime,
     updatedAt datetime,

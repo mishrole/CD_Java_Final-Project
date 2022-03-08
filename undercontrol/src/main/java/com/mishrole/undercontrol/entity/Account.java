@@ -42,19 +42,17 @@ public class Account implements Serializable {
 	@Size(min = 3, max = 30, message = "Name must have 3-30 characters long")
 	private String name;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "owner_id", nullable = false)
 	@JsonBackReference(value = "account-user")
 	private User owner;
 
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "currency_id", nullable = false)
-	@JsonBackReference(value = "account-currency")
+	//@JsonBackReference(value = "account-currency")
 	private Currency currency;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@OneToMany(mappedBy = "account", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JsonManagedReference(value = "account-record")
     private List<Record> records;

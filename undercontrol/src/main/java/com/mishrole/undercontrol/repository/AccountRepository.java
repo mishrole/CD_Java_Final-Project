@@ -12,6 +12,7 @@ import com.mishrole.undercontrol.entity.User;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	public abstract Account findAccountById(Long id);
-	public abstract Optional<Account> findByName(String name);
+	public abstract Optional<Account> findByNameAndOwner(String name, User owner);
 	public abstract List<Account> findByOwner(User user);
+	public abstract Optional<Account> findById(Long id);
 }

@@ -38,7 +38,7 @@ public class AccountService implements IAccountService {
 
 	@Override
 	public Account save(Account account, BindingResult result) {
-		Optional<Account> isNameUnique = accountRepository.findByName(account.getName());
+		Optional<Account> isNameUnique = accountRepository.findByNameAndOwner(account.getName(), account.getOwner());
 		
 		Boolean isValid = true;
 		
@@ -64,7 +64,7 @@ public class AccountService implements IAccountService {
 		}
 		
 		if(!(account.getName().equals(potentialAccount.get().getName()))) {
-			Optional<Account> isNameUnique = accountRepository.findByName(account.getName());
+			Optional<Account> isNameUnique = accountRepository.findByNameAndOwner(account.getName(), account.getOwner());
 			
 			if (isNameUnique.isPresent()) {
 				result.rejectValue("name", "Matches", "The name is already taken!");

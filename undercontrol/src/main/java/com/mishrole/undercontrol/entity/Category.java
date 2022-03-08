@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -34,7 +33,6 @@ public class Category implements Serializable {
 	@Size(min = 3, max = 15, message = "Name must have 3-15 characters long")
 	private String name;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JsonManagedReference(value = "category-record")
     private List<Record> records;
@@ -45,6 +43,14 @@ public class Category implements Serializable {
     protected void onCreate() {
         this.deleted = false;
     }
+	
+	public List<Record> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Record> records) {
+		this.records = records;
+	}
 	
 	public Long getId() {
 		return id;
@@ -68,14 +74,6 @@ public class Category implements Serializable {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
-	}
-
-	public List<Record> getRecords() {
-		return records;
-	}
-
-	public void setRecords(List<Record> records) {
-		this.records = records;
 	}
 
 	public Category() {}

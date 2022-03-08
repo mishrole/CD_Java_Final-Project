@@ -23,7 +23,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "records")
@@ -36,23 +35,24 @@ public class Record implements Serializable {
 	@Column
 	private Long id;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "account_id", nullable = false)
 	@JsonBackReference(value = "account-record")
 	private Account account;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "record_category_id", nullable = false)
 	@JsonBackReference(value = "category-record")
 	private Category category;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "record_type_id", nullable = false)
 	@JsonBackReference(value = "type-record")
 	private Type type;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date recordDate;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -79,7 +79,15 @@ public class Record implements Serializable {
         this.updatedAt = new Date();
     }
     
-    public BigDecimal getAmount() {
+    public Date getRecordDate() {
+		return recordDate;
+	}
+
+	public void setRecordDate(Date recordDate) {
+		this.recordDate = recordDate;
+	}
+
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
