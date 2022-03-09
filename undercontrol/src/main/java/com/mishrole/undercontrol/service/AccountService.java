@@ -1,5 +1,6 @@
 package com.mishrole.undercontrol.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,15 +21,31 @@ public class AccountService implements IAccountService {
 	
 	@Autowired
 	private UserRepository userRepository;
-
+	
 	@Override
 	public Account findAccountById(Long id) {
-		return accountRepository.findAccountById(id);
+		Account account = accountRepository.findAccountById(id);
+		
+		if (account != null) {
+			account.setIncome(getTotalIncomeByAccount(account.getId()));
+			account.setExpense(getTotalExpenseByAccount(account.getId()));
+			account.setTotal(getTotalBalanceByAccount(account.getId()));
+		}
+		
+		return account;
 	}
 
 	@Override
 	public List<Account> getAll() {
-		return accountRepository.findAll();
+		List<Account> accounts = accountRepository.findAll();
+		
+		accounts.forEach(account -> {
+			account.setIncome(getTotalIncomeByAccount(account.getId()));
+			account.setExpense(getTotalExpenseByAccount(account.getId()));
+			account.setTotal(getTotalBalanceByAccount(account.getId()));
+		});
+		
+		return accounts;
 	}
 
 	@Override
@@ -86,7 +103,45 @@ public class AccountService implements IAccountService {
 			return null;
 		}
 		
-		return owner.get().getAccounts();
+		List<Account> accounts = owner.get().getAccounts();
+		
+		accounts.forEach(account -> {
+			account.setIncome(getTotalIncomeByAccount(account.getId()));
+			account.setExpense(getTotalExpenseByAccount(account.getId()));
+			account.setTotal(getTotalBalanceByAccount(account.getId()));
+		});
+
+		return accounts;
+	}
+	
+	private BigDecimal getTotalBalanceByAccount(Long accountId) {
+		BigDecimal total = accountRepository.totalBalanceByAccount(accountId);
+		
+		if (total == null) {
+			total = new BigDecimal(0);
+		}
+		
+		return total;
+	}
+	
+	private BigDecimal getTotalIncomeByAccount(Long accountId) {
+		BigDecimal total = accountRepository.totalIncomeByAccount(accountId);
+		
+		if (total == null) {
+			total = new BigDecimal(0);
+		}
+		
+		return total;
+	}
+	
+	private BigDecimal getTotalExpenseByAccount(Long accountId) {
+		BigDecimal total = accountRepository.totalExpenseByAccount(accountId);
+		
+		if (total == null) {
+			total = new BigDecimal(0);
+		}
+		
+		return total;
 	}
 
 }

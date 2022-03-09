@@ -71,6 +71,28 @@ public class Account implements Serializable {
 	
 	@Transient
 	private BigDecimal total;
+	
+	@Transient
+	private BigDecimal income;
+	
+	@Transient
+	private BigDecimal expense;
+
+	public BigDecimal getIncome() {
+		return income;
+	}
+
+	public void setIncome(BigDecimal income) {
+		this.income = income;
+	}
+
+	public BigDecimal getExpense() {
+		return expense;
+	}
+
+	public void setExpense(BigDecimal expense) {
+		this.expense = expense;
+	}
 
 	public Currency getCurrency() {
 		return currency;

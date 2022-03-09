@@ -58,16 +58,27 @@ public class AccountController {
 		return Constant.responseMessage(HttpStatus.OK, "Success", accountResult);
 	}
 	
-	@GetMapping(value = "find/owner/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "owner/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> findByOwner(@PathVariable("ownerId") Long ownerId) {
 		List<Account> accounts = accountService.getAllByOwner(ownerId);
 		
-		if (!(accounts.size() > 0)) {
+		if (accounts == null) {
 			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the accounts were not found", String.format("Accounts for user with id %s were not found", ownerId), "id");
 		}
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", accounts);
 		
+	}
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+		Account account = accountService.findAccountById(id);
+		
+		if (account == null) {
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, account not found", String.format("Account with id %s not found", id), "id");
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", account);
 	}
 	
 	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

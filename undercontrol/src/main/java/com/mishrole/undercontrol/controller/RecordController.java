@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,5 +55,17 @@ public class RecordController {
 		}
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", recordResult);
+	}
+	
+	@GetMapping(value = "account/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> findByOwner(@PathVariable("accountId") Long accountId) {
+		List<Record> records = recordService.getAllByAccountId(accountId);
+		
+		if (records == null) {
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the records were not found", String.format("Records for account with id %s were not found", accountId), "id");
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", records);
+		
 	}
 }

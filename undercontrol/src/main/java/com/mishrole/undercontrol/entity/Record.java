@@ -16,10 +16,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -69,6 +72,13 @@ public class Record implements Serializable {
 	@Range(min = 0, message = "Amount must be at least 0")
 	private BigDecimal amount;
 	
+	@NotEmpty(message = "Name is required")
+	@Size(min = 3, max = 30, message = "Name must have 3-30 characters long")
+	private String name;
+	
+	@Nullable
+	private String concept;
+	
 	private Boolean deleted;
 	
 	@PrePersist
@@ -82,7 +92,23 @@ public class Record implements Serializable {
         this.updatedAt = new Date();
     }
     
-    public Date getRecordDate() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getConcept() {
+		return concept;
+	}
+
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
+
+	public Date getRecordDate() {
 		return recordDate;
 	}
 

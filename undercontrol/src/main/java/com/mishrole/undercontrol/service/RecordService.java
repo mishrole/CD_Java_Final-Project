@@ -62,4 +62,17 @@ public class RecordService implements IRecordService {
 		return recordRepository.save(record);
 	}
 
+	@Override
+	public List<Record> getAllByAccountId(Long accountId) {
+		Optional<Account> potentialAccount = accountRepository.findById(accountId);
+		
+		if (!potentialAccount.isPresent()) {
+			return null;
+		}
+		
+		Account savedAccount = potentialAccount.get();
+		
+		return recordRepository.findRecordByAccount(savedAccount);
+	}
+
 }
