@@ -1,5 +1,10 @@
 package com.mishrole.undercontrol.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,6 +144,29 @@ public class RecordService implements IRecordService {
 		}
 		
 		Account savedAccount = potentialAccount.get();
+		
+		if (start == null || start.length() == 0) {
+			start = "0000-00-00";
+		}
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+		
+		if (end == null || end.length() == 0) {
+	        c.add(Calendar.DAY_OF_MONTH, 1);
+	        Date today = c.getTime();
+			end = df.format(today);
+		} else {
+			try {
+				c.setTime(df.parse(end));
+				c.add(Calendar.DAY_OF_MONTH, 1);
+				Date today = c.getTime();
+				end = df.format(today);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
 		List<Record> result = recordRepository.searchRecordByAccountAndFilters(savedAccount.getId(), keyword+"%", start, end);
 		
