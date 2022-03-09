@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mishrole.undercontrol.entity.Record;
@@ -80,6 +82,19 @@ public class RecordController {
 	@GetMapping(value = "account/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> findByOwner(@PathVariable("accountId") Long accountId) {
 		List<Record> records = recordService.getAllByAccountId(accountId);
+		
+		if (records == null) {
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the records were not found", String.format("Records for account with id %s were not found", accountId), "id");
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", records);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "account/{accountId}/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> searchByAccountAndFilters(@PathVariable("accountId") Long accountId, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("start") String start, @RequestParam("end") String end) {
+		List<Record> records = recordService.searchRecordByAccountAndFilters(accountId, keyword, start, end);
 		
 		if (records == null) {
 			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the records were not found", String.format("Records for account with id %s were not found", accountId), "id");

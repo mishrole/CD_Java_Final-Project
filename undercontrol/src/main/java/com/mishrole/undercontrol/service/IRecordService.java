@@ -12,4 +12,5 @@ public interface IRecordService {
 	public abstract Record save(Record record, BindingResult result);
 	public abstract Record update(Long id, Record record, BindingResult result);
 	public abstract List<Record> getAllByAccountId(Long accountId);
+	public abstract List<Record> searchRecordByAccountAndFilters(Long accountId, String keyword, String start, String end);
 }

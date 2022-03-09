@@ -130,4 +130,19 @@ public class RecordService implements IRecordService {
 
 	}
 
+	@Override
+	public List<Record> searchRecordByAccountAndFilters(Long accountId, String keyword, String start, String end) {
+		Optional<Account> potentialAccount = accountRepository.findById(accountId);
+		
+		if (!potentialAccount.isPresent()) {
+			return null;
+		}
+		
+		Account savedAccount = potentialAccount.get();
+		
+		List<Record> result = recordRepository.searchRecordByAccountAndFilters(savedAccount.getId(), keyword+"%", start, end);
+		
+		return result;
+	}
+
 }
