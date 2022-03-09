@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,6 +56,25 @@ public class RecordController {
 		}
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", recordResult);
+	}
+	
+	@PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> update(@PathVariable("id") Long id, @Valid @RequestBody Record record, BindingResult result) {
+		
+		if (result.hasErrors()) {
+			List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the record has not been updated", errors);
+		}
+		
+		Record updatedResult = recordService.update(id, record, result);
+		
+		List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+		
+		if (updatedResult == null) {
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the record has not been updated", errors);
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", updatedResult);
 	}
 	
 	@GetMapping(value = "account/{accountId}", produces = MediaType.APPLICATION_JSON_VALUE)

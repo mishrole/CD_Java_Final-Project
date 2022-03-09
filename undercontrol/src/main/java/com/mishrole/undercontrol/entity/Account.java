@@ -50,7 +50,7 @@ public class Account implements Serializable {
 	private User owner;
 
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "currency_id", nullable = false)
 	//@JsonBackReference(value = "account-currency")
 	private Currency currency;

@@ -55,6 +55,13 @@ public class AccountService implements IAccountService {
 
 	@Override
 	public Account save(Account account, BindingResult result) {
+		Optional<User> owner = userRepository.findById(account.getOwner().getId());
+		
+		if (!owner.isPresent()) {
+			result.rejectValue("owner", "Matches", "User with Id " + account.getOwner().getId() + " not found");
+			return null;
+		}
+		
 		Optional<Account> isNameUnique = accountRepository.findByNameAndOwner(account.getName(), account.getOwner());
 		
 		Boolean isValid = true;
