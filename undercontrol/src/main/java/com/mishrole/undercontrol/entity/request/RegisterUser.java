@@ -46,7 +46,7 @@ public class RegisterUser implements Serializable {
 	@Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
 	private String confirm;
 	
-	@NotNull(message = "Role is required")
+	//@NotNull(message = "Role is required")
 	private Long roleId;
 
 	public Long getId() {

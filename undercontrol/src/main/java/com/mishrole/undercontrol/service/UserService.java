@@ -105,7 +105,9 @@ public class UserService implements IUserService {
 		BeanUtils.copyProperties(user, newUser);
 		newUser.setPassword(encryptedPassword);
 		
-		Role role = roleRepository.findRoleById(user.getRoleId());
+		//Role role = roleRepository.findRoleById(user.getRoleId());
+		// Only user role
+		Role role = roleRepository.findRoleById(2l);
 		
 		List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
