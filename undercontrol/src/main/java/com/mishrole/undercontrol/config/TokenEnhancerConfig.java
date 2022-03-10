@@ -24,9 +24,12 @@ public class TokenEnhancerConfig implements TokenEnhancer {
 		User user = userService.findUserByEmail(authentication.getName());
 		
 		Map<String, Object> information = new HashMap<>();
-		information.put("name", user.getLastname() + ' ' + user.getFirstname());
+		//information.put("name", user.getLastname() + ' ' + user.getFirstname());
+		information.put("firstname", user.getFirstname());
+		information.put("lastname", user.getLastname());
 		information.put("email", user.getEmail());
-		information.put("role", user.getRoles());
+		information.put("roles", user.getRoles());
+		// Can't pass user, error Handling error: IllegalStateException, Cannot convert access token to JSON
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(information);
 		return accessToken;
 		

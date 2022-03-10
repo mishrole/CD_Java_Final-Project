@@ -23,7 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http)throws Exception {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.woff", "/**/*.woff2", "/**/*.png").permitAll()
-		.antMatchers(HttpMethod.POST, "/api/v1/users/register", "/api/v1/users/login").permitAll()
+		.antMatchers(HttpMethod.POST, "/api/v1/users/register", "/api/v1/users/login", "api/v1/users/{id}/changepassword").permitAll()
 		.antMatchers("/oauth/**").permitAll()
 		.anyRequest().authenticated()
 		.and().cors().configurationSource(corsConfigurationSource());
