@@ -101,15 +101,15 @@ public class UserController {
 		return Constant.responseMessage(HttpStatus.OK, "Success", registerResult);
 	}
 	
-	@PutMapping(value = "/{id}/changepassword", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> changePassword(@PathVariable("id") Long id, @Valid @RequestBody ChangePwdUser user, BindingResult result) {
+	@PutMapping(value = "/changepassword", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePwdUser user, BindingResult result) {
 		
 		if (result.hasErrors()) {
 			List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
 			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the user has not been updated", errors);
 		}
 		
-		User updatedResult = userService.changePassword(id, user, result);
+		User updatedResult = userService.changePassword(user.getId(), user, result);
 		
 		List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
 		

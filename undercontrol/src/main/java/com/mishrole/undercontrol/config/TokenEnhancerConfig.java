@@ -25,6 +25,7 @@ public class TokenEnhancerConfig implements TokenEnhancer {
 		
 		Map<String, Object> information = new HashMap<>();
 		//information.put("name", user.getLastname() + ' ' + user.getFirstname());
+		information.put("id", user.getId());
 		information.put("firstname", user.getFirstname());
 		information.put("lastname", user.getLastname());
 		information.put("email", user.getEmail());

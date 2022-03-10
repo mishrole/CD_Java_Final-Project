@@ -3,11 +3,15 @@ package com.mishrole.undercontrol.entity.request;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ChangePwdUser implements Serializable {
 
 	private static final long serialVersionUID = 61113876886212100L;
+	
+	@NotNull(message = "Id is required")
+	private Long id;
 
 	@NotEmpty(message = "Current Password is required")
 	@Size(min=8, max=128, message="Current Password must be between 8 and 128 characters")
@@ -20,6 +24,14 @@ public class ChangePwdUser implements Serializable {
 	@NotEmpty(message = "Confirm Password is required")
 	@Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
 	private String confirm;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getCurrent() {
 		return current;
