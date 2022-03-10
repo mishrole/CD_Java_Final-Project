@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -171,8 +173,17 @@ public class UserService implements IUserService {
 	@Override
 	public User changePassword(Long id, ChangePwdUser user, BindingResult result) {
 		Optional<User> checkUser = userRepository.findById(id);
-		
 		User savedUser = checkUser.get();
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = auth.getName();
+		
+		if (!savedUser.getEmail().equals(username)) {
+			result.rejectValue("id", "Matches", "Id provided doesn't match logged user");
+			return null;
+		}
+		
+
 		String rawPassword = user.getCurrent();
 
 		if (!passwordEncoder.matches(rawPassword, savedUser.getPassword())) {
