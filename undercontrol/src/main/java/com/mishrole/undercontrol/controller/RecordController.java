@@ -93,7 +93,7 @@ public class RecordController {
 	
 	@ResponseBody
 	@GetMapping(value = "account/{accountId}/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> searchByAccountAndFilters(@PathVariable("accountId") Long accountId, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam("start") String start, @RequestParam("end") String end) {
+	public ResponseEntity<?> searchByAccountAndFilters(@PathVariable("accountId") Long accountId, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end) {
 		List<Record> records = recordService.searchRecordByAccountAndFilters(accountId, keyword, start, end);
 		
 		if (records == null) {

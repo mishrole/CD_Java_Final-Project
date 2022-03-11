@@ -168,7 +168,7 @@ public class RecordService implements IRecordService {
 			
 		}
 		
-		List<Record> result = recordRepository.searchRecordByAccountAndFilters(savedAccount.getId(), keyword+"%", start, end);
+		List<Record> result = recordRepository.searchRecordByAccountAndFilters(savedAccount.getId(), "%"+keyword+"%", start, end);
 		
 		return result;
 	}
