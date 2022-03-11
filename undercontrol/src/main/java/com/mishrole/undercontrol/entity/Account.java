@@ -3,7 +3,7 @@ package com.mishrole.undercontrol.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+//import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+//import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -27,7 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "accounts")
@@ -55,9 +55,10 @@ public class Account implements Serializable {
 	//@JsonBackReference(value = "account-currency")
 	private Currency currency;
 	
-	@OneToMany(mappedBy = "account", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	//@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+	/*@OneToMany(mappedBy = "account", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JsonManagedReference(value = "account-record")
-    private List<Record> records;
+    private List<Record> records;*/
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -169,13 +170,13 @@ public class Account implements Serializable {
 		this.owner = owner;
 	}
 	
-	public List<Record> getRecords() {
+	/*public List<Record> getRecords() {
 		return records;
 	}
 
 	public void setRecords(List<Record> records) {
 		this.records = records;
-	}
+	}*/
 
 	public Account() {}
 }

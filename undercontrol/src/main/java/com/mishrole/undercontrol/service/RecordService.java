@@ -1,5 +1,6 @@
 package com.mishrole.undercontrol.service;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +55,8 @@ public class RecordService implements IRecordService {
 	public Record save(Record record, BindingResult result) {
 		Optional<Account> potentialAccount = accountRepository.findById(record.getAccount().getId());
 		
+		Boolean isValid = true;
+		
 		if (!potentialAccount.isPresent()) {
 			result.rejectValue("account.id", "Matches", "Account with Id " + record.getAccount().getId() + " not found");
 			return null;
@@ -70,6 +73,30 @@ public class RecordService implements IRecordService {
 		
 		if (!accountOwner.getEmail().equals(username)) {
 			result.rejectValue("account.id", "Matches", "Only the owner of the account can add records");
+			return null;
+		}
+		
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date today = sdf.parse(sdf.format(new Date()));
+			
+			Date recordDate = sdf.parse(sdf.format(record.getRecordDate()));
+			
+			if (recordDate.after(today)) {
+            	result.rejectValue("recordDate", "Matches", "Record Date must be in the past");
+            	isValid = false;
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if (!(record.getAmount().compareTo(new BigDecimal(0.001)) > 0)) {
+			result.rejectValue("amount", "Matches", "Amount must be greater or equals than 0.001");
+			isValid = false;
+		}
+		
+		if (!isValid) {
 			return null;
 		}
 		
@@ -125,6 +152,9 @@ public class RecordService implements IRecordService {
 		savedRecord.setAmount(record.getAmount());
 		savedRecord.setRecordDate(record.getRecordDate());
 		
+		Account account = accountRepository.findAccountById(record.getAccount().getId());
+		savedRecord.setAccount(account);
+		
 		Category category = categoryRepository.findCategoryById(record.getCategory().getId());
 		savedRecord.setCategory(category);
 		
@@ -149,8 +179,12 @@ public class RecordService implements IRecordService {
 			start = "0000-00-00";
 		}
 		
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar c = Calendar.getInstance();
+//        c.setTimeInMillis(43199000);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
 		
 		if (end == null || end.length() == 0) {
 	        c.add(Calendar.DAY_OF_MONTH, 1);
@@ -173,4 +207,10 @@ public class RecordService implements IRecordService {
 		return result;
 	}
 
+	
+	@Override
+	public void delete(Long id) {
+		recordRepository.deleteById(id);
+	}
+	
 }

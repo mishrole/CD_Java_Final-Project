@@ -24,7 +24,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -39,9 +39,10 @@ public class Record implements Serializable {
 	@Column
 	private Long id;
 	
+	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "account_id", nullable = false)
-	@JsonBackReference(value = "account-record")
+	//@JsonBackReference(value = "account-record")
 	private Account account;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})

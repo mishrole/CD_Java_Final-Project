@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,5 +103,22 @@ public class RecordController {
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", records);
 		
+	}
+	
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+		Record record = recordService.findRecordById(id);
+		
+		if (record == null) {
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, record not found", String.format("Record with id %s not found", id), "id");
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", record);
+	}
+	
+	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+		recordService.delete(id);
+		return Constant.responseMessage(HttpStatus.OK, "Success", null);
 	}
 }
