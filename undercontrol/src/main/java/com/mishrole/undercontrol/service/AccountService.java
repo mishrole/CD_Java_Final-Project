@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.mishrole.undercontrol.entity.Account;
+import com.mishrole.undercontrol.entity.Currency;
 import com.mishrole.undercontrol.entity.User;
 import com.mishrole.undercontrol.repository.AccountRepository;
+import com.mishrole.undercontrol.repository.CurrencyRepository;
 import com.mishrole.undercontrol.repository.UserRepository;
 
 @Service
@@ -21,6 +23,9 @@ public class AccountService implements IAccountService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private CurrencyRepository currencyRepository;
 	
 	@Override
 	public Account findAccountById(Long id) {
@@ -98,6 +103,9 @@ public class AccountService implements IAccountService {
 		
 		Account savedAccount = potentialAccount.get();
 		savedAccount.setName(account.getName());
+		
+		Currency currency = currencyRepository.findCurrencyById(account.getCurrency().getId());
+		savedAccount.setCurrency(currency);
 		
 		return accountRepository.save(savedAccount);
 	}

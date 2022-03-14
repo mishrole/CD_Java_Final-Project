@@ -78,7 +78,7 @@ Create table records (
     account_id int not null,
     name varchar(255) not null,
     concept text,
-    amount decimal(6,2) not null,
+    amount decimal(10,2) not null,
     recordDate datetime,
     deleted bool default false,
 	createdAt datetime,

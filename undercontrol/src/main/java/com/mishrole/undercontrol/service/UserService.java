@@ -9,12 +9,15 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import com.mishrole.undercontrol.entity.Mail;
 import com.mishrole.undercontrol.entity.Role;
 import com.mishrole.undercontrol.entity.User;
 import com.mishrole.undercontrol.entity.request.ChangePwdUser;
@@ -33,6 +36,9 @@ public class UserService implements IUserService {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JavaMailSender emailSender;
 
 	@Override
 	public User findUserByEmail(String email) {
@@ -169,7 +175,6 @@ public class UserService implements IUserService {
 		return userRepository.save(savedUser);
 	}
 
-	
 	@Override
 	public User changePassword(Long id, ChangePwdUser user, BindingResult result) {
 		Optional<User> checkUser = userRepository.findById(id);
@@ -206,6 +211,16 @@ public class UserService implements IUserService {
 		savedUser.setPassword(encryptedPassword);
 		
 		return userRepository.save(savedUser);
+	}
+
+	public void sendSimpleMessage(Mail mail) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setSubject(mail.getSubject());
+		message.setText(mail.getContent());
+		message.setTo(mail.getTo());
+		message.setFrom(mail.getFrom());
+		
+		emailSender.send(message);
 	}
 
 }

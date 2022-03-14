@@ -16,11 +16,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
@@ -70,7 +71,9 @@ public class Record implements Serializable {
 	private Date updatedAt;
 	
 	@NotNull
-	@Range(min = 0, message = "Amount must be at least 0")
+	@DecimalMin(value = "0.01", message = "Amount must be at least 0.01")
+	@Digits(integer = 8, fraction = 2, message = "Amount has a limit of 10 digits (8 integer, 2 decimal)")
+	//@Range(min = 0, message = "Amount must be at least 0")
 	private BigDecimal amount;
 	
 	@NotEmpty(message = "Name is required")

@@ -1,5 +1,6 @@
 package com.mishrole.undercontrol.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,25 @@ public class RecordController {
 		
 		if (records == null) {
 			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the records were not found", String.format("Records for account with id %s were not found", accountId), "id");
+		}
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", records);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "owner/{ownerId}/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> searchByOwnerAndOrAccountAndFilters(@PathVariable("ownerId") Long ownerId, @RequestParam(value = "accountId", required = false) Long accountId, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end) {
+		List<Record> records = new ArrayList<Record>();
+		
+		if (accountId == null) {
+			records = recordService.searchRecordByOwnerAndFilters(ownerId, keyword, start, end);
+		} else {
+			records = recordService.searchRecordByOwnerAndAccountAndFilters(ownerId, accountId, keyword, start, end);
+		}
+		
+		if (records == null) {
+			return Constant.responseMessageError(HttpStatus.NOT_FOUND, "Error", "An error ocurred while performing the operation, the records were not found", "Records not found", "id");
 		}
 		
 		return Constant.responseMessage(HttpStatus.OK, "Success", records);

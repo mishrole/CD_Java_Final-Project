@@ -1,6 +1,5 @@
 package com.mishrole.undercontrol.service;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +24,7 @@ import com.mishrole.undercontrol.repository.AccountRepository;
 import com.mishrole.undercontrol.repository.CategoryRepository;
 import com.mishrole.undercontrol.repository.RecordRepository;
 import com.mishrole.undercontrol.repository.TypeRepository;
+import com.mishrole.undercontrol.repository.UserRepository;
 
 @Service
 public class RecordService implements IRecordService {
@@ -40,6 +40,9 @@ public class RecordService implements IRecordService {
 	
 	@Autowired
 	private TypeRepository typeRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public Record findRecordById(Long id) {
@@ -91,10 +94,10 @@ public class RecordService implements IRecordService {
 			e.printStackTrace();
 		}
 		
-		if (!(record.getAmount().compareTo(new BigDecimal(0.001)) > 0)) {
-			result.rejectValue("amount", "Matches", "Amount must be greater or equals than 0.001");
+		/*if (!(record.getAmount().compareTo(new BigDecimal(0.01)) > 0)) {
+			result.rejectValue("amount", "Matches", "Amount must be greater or equals than 0.01");
 			isValid = false;
-		}
+		}*/
 		
 		if (!isValid) {
 			return null;
@@ -206,7 +209,101 @@ public class RecordService implements IRecordService {
 		
 		return result;
 	}
+	
+	@Override
+	public List<Record> searchRecordByOwnerAndAccountAndFilters(Long ownerId, Long accountId, String keyword, String start, String end) {
+		Optional<User> potentialOwner = userRepository.findById(ownerId);
+		
+		if (!potentialOwner.isPresent()) {
+			return null;
+		}
+		
+		if (start == null || start.length() == 0) {
+			start = "0000-00-00";
+		}
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+//        c.setTimeInMillis(43199000);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+		
+		if (end == null || end.length() == 0) {
+	        c.add(Calendar.DAY_OF_MONTH, 1);
+	        Date today = c.getTime();
+			end = df.format(today);
+		} else {
+			try {
+				c.setTime(df.parse(end));
+				c.add(Calendar.DAY_OF_MONTH, 1);
+				Date today = c.getTime();
+				end = df.format(today);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		User savedOwner = potentialOwner.get();
+		
+		Long accountIdParam = accountId;
+		
+		if (accountIdParam != null) {
+			Optional<Account> potentialAccount = accountRepository.findById(accountId);
+			if (potentialAccount.isPresent()) {
+				Account savedAccount = potentialAccount.get();
+				accountIdParam = savedAccount.getId();
+			}
+		}
+		
 
+		List<Record> result = recordRepository.searchRecordByOwnerAndAccountAndFilters(savedOwner.getId(), accountIdParam, "%"+keyword+"%", start, end);
+		
+		return result;
+	}
+	
+	@Override
+	public List<Record> searchRecordByOwnerAndFilters(Long ownerId, String keyword, String start, String end) {
+		Optional<User> potentialOwner = userRepository.findById(ownerId);
+		
+		if (!potentialOwner.isPresent()) {
+			return null;
+		}
+		
+		if (start == null || start.length() == 0) {
+			start = "0000-00-00";
+		}
+		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+//        c.setTimeInMillis(43199000);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+		
+		if (end == null || end.length() == 0) {
+	        c.add(Calendar.DAY_OF_MONTH, 1);
+	        Date today = c.getTime();
+			end = df.format(today);
+		} else {
+			try {
+				c.setTime(df.parse(end));
+				c.add(Calendar.DAY_OF_MONTH, 1);
+				Date today = c.getTime();
+				end = df.format(today);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		User savedOwner = potentialOwner.get();
+
+		List<Record> result = recordRepository.searchRecordByOwnerAndFilters(savedOwner.getId(), "%"+keyword+"%", start, end);
+		
+		return result;
+	}
 	
 	@Override
 	public void delete(Long id) {

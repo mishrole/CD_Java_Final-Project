@@ -120,4 +120,25 @@ public class UserController {
 		return Constant.responseMessage(HttpStatus.OK, "Success", updatedResult);
 	}
 	
+	/*@PostMapping(value = "/forgetpassword", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgetPassword forgetPassword, BindingResult result) {
+		
+		if (result.hasErrors()) {
+			List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the user has not been updated", errors);
+		}
+		
+		User potentialUser = userService.findUserByEmail(forgetPassword.getEmail());
+		List<Map<String, Object>> errors = ValidationErrors.mapErrors(result);
+		
+		if (potentialUser == null) {
+			return Constant.responseMessageErrors(HttpStatus.BAD_REQUEST, "Error", "An error occurred while performing the operation, the user has not been updated", errors);
+		}
+		
+		String token = UUID.randomUUID().toString();
+		
+		return Constant.responseMessage(HttpStatus.OK, "Success", updatedResult);
+		
+	}*/
+	
 }
